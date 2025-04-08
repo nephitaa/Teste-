@@ -1,0 +1,162 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Oii Thamylla Quer sair comigo?</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Comic Sans MS', cursive;
+      background: #e6f0fa;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      overflow: hidden;
+      text-align: center;
+      position: relative;
+    }
+    h1 { font-size: 2rem; color: #1e3a8a; margin-bottom: 40px; }
+    .btn {
+      padding: 15px 30px;
+      font-size: 1.2rem;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      margin: 20px;
+      transition: all 0.2s ease-in-out;
+      z-index: 2;
+    }
+    #yesBtn { background-color: #2563eb; color: white; }
+    #noBtn {
+      background-color: #FF0000;
+      color: white;
+      position: absolute;
+    }
+    #message {
+      margin-top: 20px;
+      font-size: 1.5rem;
+      color: #333;
+      display: none;
+    }
+    #gifContainer {
+      display: none;
+      margin-top: 20px;
+    }
+    #gifContainer img {
+      width: 200px;
+      border-radius: 15px;
+    }
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>
+  <h1> Oii Thamylla Quer Sair Comigo? </h1>
+  <button id="yesBtn" class="btn">SIM</button>
+  <button id="noBtn" class="btn">NÃO</button>
+  <div id="message">Amazinggg! the best açai as 18hrs você só escolhe o Dia :) !</div>
+  <div id="gifContainer">
+    <img src=https://media.giphy.com/media/26AHONQ79FdWZhAI0/giphy.gif alt="astronauta dançando feliz">
+  </div>
+  <canvas id="confetti-canvas"></canvas>
+
+  <script>
+    const noBtn = document.getElementById('noBtn');
+    const yesBtn = document.getElementById('yesBtn');
+    const message = document.getElementById('message');
+    const gifContainer = document.getElementById('gifContainer');
+    const canvas = document.getElementById('confetti-canvas');
+    const ctx = canvas.getContext('2d');
+    let W = window.innerWidth;
+    let H = window.innerHeight;
+    canvas.width = W;
+    canvas.height = H;
+
+    function moveNoBtn() {
+      const i = Math.floor(Math.random() * 80) + 10;
+      const j = Math.floor(Math.random() * 80) + 10;
+      noBtn.style.top = i + '%';
+      noBtn.style.left = j + '%';
+    }
+
+    ['mouseenter', 'mouseover', 'touchstart'].forEach(evt =>
+      noBtn.addEventListener(evt, moveNoBtn)
+    );
+
+    yesBtn.addEventListener('click', () => {
+      message.style.display = 'block';
+      gifContainer.style.display = 'block';
+      yesBtn.style.display = 'none';
+      noBtn.style.display = 'none';
+      launchConfetti();
+      setTimeout(() => {
+        window.location.href = "https://wa.me/5565984150323?text=Boraa,+vamos+combinar+o+Diaa!";
+      }, 6000);
+    });
+
+    let particles = [];
+    for (let i = 0; i < 100; i++) {
+      particles.push({
+        x: Math.random() * W,
+        y: Math.random() * H,
+        r: Math.random() * 5 + 2,
+        d: Math.random() * 100,
+        color: `hsl(${Math.random() * 360}, 100%, 60%)`,
+        tilt: Math.floor(Math.random() * 10) - 10,
+        tiltAngle: 0
+      });
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+      for (let i = 0; i < particles.length; i++) {
+        let p = particles[i];
+        ctx.beginPath();
+        ctx.fillStyle = p.color;
+        ctx.moveTo(p.x + p.tilt + p.r / 2, p.y);
+        ctx.lineTo(p.x + p.tilt, p.y + p.tilt + p.r / 2);
+        ctx.lineTo(p.x + p.tilt - p.r / 2, p.y);
+        ctx.closePath();
+        ctx.fill();
+      }
+      update();
+    }
+
+    function update() {
+      for (let i = 0; i < particles.length; i++) {
+        let p = particles[i];
+        p.y += Math.cos(p.d) + 1 + p.r / 2;
+        p.tiltAngle += 0.1;
+        p.tilt = Math.sin(p.tiltAngle) * 15;
+
+        if (p.y > H) {
+          p.y = -10;
+          p.x = Math.random() * W;
+        }
+      }
+    }
+
+    function launchConfetti() {
+      setInterval(draw, 20);
+    }
+
+    window.addEventListener('resize', () => {
+      W = window.innerWidth;
+      H = window.innerHeight;
+      canvas.width = W;
+      canvas.height = H;
+    });
+  </script>
+</body>
+</html>
